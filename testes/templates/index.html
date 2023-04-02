@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Swift</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://unpkg.com/@popperjs/core@2.10.3/dist/umd/popper.min.js"></script>
+	<script src="https://unpkg.com/tippy.js@6.3.1/dist/tippy-bundle.umd.min.js"></script>
+	<link rel="shortcut icon" href="IMG/scholarship.ico" type="image/x-icon">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+		}
+
+		h1 {
+			font-size: 36px;
+			margin-bottom: 20px;
+			text-align: center;
+		}
+
+		input[type="text"] {
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 20px;
+			font-size: 18px;
+			border: none;
+			border-radius: 5px;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+		}
+
+		.btn {
+			display: inline-block;
+			padding: 10px 20px;
+			background-color: #007bff;
+			color: #fff;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-right: 10px;
+			transition: background-color 0.3s ease;
+		}
+
+		.btn:hover {
+			background-color: #0069d9;
+		}
+
+		.answer {
+			margin-top: 20px;
+			font-size: 18px;
+			line-height: 1.5;
+			text-align: justify;
+			border: none;
+			border-radius: 5px;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			display: none;
+		}
+
+		.summary {
+			margin-top: 20px;
+			font-size: 18px;
+			line-height: 1.5;
+			text-align: justify;
+			border: none;
+			border-radius: 5px;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			display: none;
+		}
+
+		.sobre {
+  max-width: 800px; /* define a largura máxima do conteúdo */
+  margin: 0 auto; /* centraliza o conteúdo na página */
+  padding: 20px; /* adiciona um espaçamento interno */
+}
+
+.lvl1 {
+  font-size: 2rem; /* define o tamanho da fonte do título */
+  margin-bottom: 20px; /* adiciona uma margem inferior ao título */
+}
+
+.p2 {
+  font-size: 1.2rem; /* define o tamanho da fonte do texto */
+  line-height: 1.5; /* define a altura da linha para facilitar a leitura */
+  margin-bottom: 10px; /* adiciona uma margem inferior aos parágrafos */
+}
+
+
+
+
+.button{
+	margin: 0 auto;
+  width: 50%; 
+}
+.fed {
+	display: inline-block;
+    padding: 10px 43px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 18px;
+    transition: background-color 0.3s ease;
+    margin-left: 61px;
+	margin-top: 3px;
+		}
+
+
+
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Respostas Inteligentes: Encontre soluções para suas dúvidas aqui!</h1>
+		<input type="text" id="pergunta" placeholder="Digite sua pergunta...">
+		<div class="button">
+			<button class="btn" id="btn-responder">Responder</button>
+			<button class="btn" id="btn-copiar">Copiar</button>
+			<button class="btn" id="btn-resumir">Resumir</button>
+			<form class="" action="#" method="get">
+				<button class="fed" type="submit" href="#">EM BREVE</button>
+			  </form>
+			  
+
+		</div>
+		<div id="resposta" class="answer"></div>
+		<div id="resumo" class="summary"></div>
+	</div>
+
+	<div class="sobre">
+		<h1 class="lvl1">Olá, eu sou Luiz Guilherme</h1>
+		<p class="p2">Um desenvolvedor que está sempre em busca de aprender mais sobre programação. Recentemente, criei um pequeno código que permite responder perguntas e, ainda melhor, resumir tudo em um único clique.</p>
+		<p>Embora seja um código simples, ainda estou estudando para aprimorá-lo e corrigir eventuais bugs que possam surgir. Gostaria de agradecer a todos que estão usando o meu código e saibam que em breve trarei mais novidades!</p>
+		<p>Esse projeto foi desenvolvido especialmente para a turma 1ºAM, como uma forma de ajudar no aprendizado. Espero que possa ser útil para todos que o utilizarem. Se tiverem alguma sugestão ou feedback, por favor, não hesitem em entrar em contato comigo.</p>
+		<p>Obrigado!</p>
+	  </div>
+	  
+
+
+	<script>
+$(document).ready(function() {
+  $("#btn-responder").click(function() {
+    var pergunta = $("#pergunta").val();
+    if (pergunta) {
+      // Verificar se a pergunta é uma expressão matemática
+      var expressao = pergunta.replace(/ /g,'');
+      if (/^[0-9+\-*/().]+$/.test(expressao)) {
+        try {
+          // Resolver a expressão matemática
+          var resultado = eval(expressao);
+
+          // Exibir a resposta na div de resposta
+          $("#resposta").html("O resultado é: " + resultado).fadeIn();
+          return;
+        } catch (e) {
+          // Caso ocorra um erro na resolução da expressão, tentar buscar resposta na Wikipedia
+        }
+      }
+
+      // Fazer a requisição GET para a API da Wikipedia
+      $.ajax({
+        url: "https://pt.wikipedia.org/w/api.php",
+        dataType: "jsonp",
+        data: {
+          action: "query",
+          format: "json",
+          generator: "search",
+          gsrlimit: "1",
+          prop: "extracts",
+          exchars: "500",
+          exintro: 1,
+          explaintext: 1,
+          gsrsearch: pergunta
+        },
+        success: function(response) {
+          if (response.query && response.query.pages) {
+            // Obter a primeira página retornada pela API
+            var pages = response.query.pages;
+            var pageId = Object.keys(pages)[0];
+            var extract = pages[pageId].extract;
+
+            // Exibir a resposta na div de resposta
+            $("#resposta").html(extract).fadeIn();
+          } else {
+            // Caso não haja resposta, exibir mensagem de erro
+            $("#resposta").html("Desculpe, não encontrei uma resposta para essa pergunta.").fadeIn();
+          }
+        },
+        error: function() {
+          // Caso ocorra algum erro na requisição, exibir mensagem de erro
+          $("#resposta").html("Ocorreu um erro na requisição. Por favor, tente novamente mais tarde.").fadeIn();
+        }
+      });
+    } else {
+      // Caso não haja pergunta digitada, exibir mensagem de erro
+      $("#resposta").html("Por favor, digite uma pergunta ou expressão matemática.").fadeIn();
+    }
+  });
+
+  // Função para copiar o conteúdo da div de resposta
+  $("#btn-copiar").click(function() {
+    var copyText = $("#resposta").text();
+    var aux = document.createElement("input");
+    aux.setAttribute("value", copyText);
+    document.body.appendChild(aux);
+    aux.select();
+    document.execCommand("copy");
+    document.body.removeChild(aux);
+    alert("Resposta copiada para a área de transferência.");
+  });
+
+  // Função para resumir o conteúdo da div de resposta
+  $("#btn-resumir").click(function() {
+    var extract = $("#resposta").text();
+    var resumo = extract.substring(0, 200) + "...";
+
+    // Exibir o resumo na div de resumo
+    $("#resumo").html(resumo).fadeIn();
+  });
+});
+
+</script>
+</body>
+</html>
